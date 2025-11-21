@@ -9,7 +9,8 @@ export async function GET(request: Request) {
 
   const token = await getToken({
     req: request,
-    secret: process.env.AUTH_SECRET,
+    // Use NEXTAUTH_SECRET if present, otherwise fall back to AUTH_SECRET
+    secret: process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET,
     secureCookie: !isDevelopmentEnvironment,
   });
 

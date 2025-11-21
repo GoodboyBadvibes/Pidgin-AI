@@ -19,7 +19,8 @@ export async function middleware(request: NextRequest) {
 
   const token = await getToken({
     req: request,
-    secret: process.env.AUTH_SECRET,
+    // Accept either NEXTAUTH_SECRET (common convention) or AUTH_SECRET (kept for compatibility)
+    secret: process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET,
     secureCookie: !isDevelopmentEnvironment,
   });
 
