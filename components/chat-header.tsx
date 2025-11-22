@@ -8,8 +8,7 @@ import { SidebarToggle } from "@/components/sidebar-toggle";
 import { Button } from "@/components/ui/button";
 import { GitIcon, PlusIcon } from "./icons";
 import { useSidebar } from "./ui/sidebar";
-
-// import { VisibilitySelector, type VisibilityType } from "./visibility-selector";
+import type { VisibilityType } from "./visibility-selector";
 
 function PureChatHeader({
   chatId,
