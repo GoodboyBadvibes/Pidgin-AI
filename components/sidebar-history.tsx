@@ -129,7 +129,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
     });
 
     toast.promise(deletePromise, {
-      loading: "Deleting chat...",
+      loading: "Dem dey delete di chat",
       success: () => {
         mutate((chatHistories) => {
           if (chatHistories) {
@@ -140,9 +140,9 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
           }
         });
 
-        return "Chat deleted successfully";
+        return "Dem don delete di chat finish.";
       },
-      error: "Failed to delete chat",
+      error: "Dem no fit delete this chat",
     });
 
     setShowDeleteDialog(false);
@@ -157,7 +157,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
       <SidebarGroup>
         <SidebarGroupContent>
           <div className="flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-zinc-500">
-            Login to save and revisit previous chats!
+            Log in save your chat make you fit come back see am!
           </div>
         </SidebarGroupContent>
       </SidebarGroup>
@@ -198,7 +198,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
       <SidebarGroup>
         <SidebarGroupContent>
           <div className="flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-zinc-500">
-            Your conversations will appear here once you start chatting!
+            Wetin una talk go appear for here
           </div>
         </SidebarGroupContent>
       </SidebarGroup>
@@ -334,7 +334,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
 
           {hasReachedEnd ? (
             <div className="mt-8 flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-zinc-500">
-              You have reached the end of your chat history.
+              You don reach di end of your chat.
             </div>
           ) : (
             <div className="mt-8 flex flex-row items-center gap-2 p-2 text-zinc-500 dark:text-zinc-400">
@@ -350,10 +350,10 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
       <AlertDialog onOpenChange={setShowDeleteDialog} open={showDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>You sure ?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              chat and remove it from our servers.
+              This thing wey you wan do, you fit no fit change am again o. Your
+              chat go vanish finish, and e go commot for our server die-die.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
