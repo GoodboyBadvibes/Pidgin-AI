@@ -5,7 +5,14 @@ import { isDevelopmentEnvironment } from "@/lib/constants";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const redirectUrl = searchParams.get("redirectUrl") || "/";
+  let redirectUrl = searchParams.get("redirectUrl") || "/";
+
+  // Decode the redirectUrl if it's encoded
+  try {
+    redirectUrl = decodeURIComponent(redirectUrl);
+  } catch {
+    redirectUrl = "/";
+  }
 
   const token = await getToken({
     req: request,
@@ -15,8 +22,15 @@ export async function GET(request: Request) {
   });
 
   if (token) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL(redirectUrl, request.url));
   }
 
-  return signIn("guest", { redirect: true, redirectTo: redirectUrl });
+  // Sign in as guest and redirect
+  try {
+    await signIn("guest", { redirect: false });
+  } catch (error) {
+    console.error("Guest sign-in failed:", error);
+  }
+
+  return NextResponse.redirect(new URL(redirectUrl, request.url));
 }
