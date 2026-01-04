@@ -108,16 +108,14 @@ export async function POST(request: Request) {
       selectedVisibilityType: VisibilityType;
     } = requestBody;
 
+    // Auth disabled - use a default guest user
     const session = await auth();
+    const userId = session?.user?.id || "guest-user";
 
-    if (!session?.user) {
-      return new ChatSDKError("unauthorized:chat").toResponse();
-    }
-
-    const userType: UserType = session.user.type;
+    const userType: UserType = session?.user?.type || "guest";
 
     const messageCount = await getMessageCountByUserId({
-      id: session.user.id,
+      id: userId,
       differenceInHours: 24,
     });
 
@@ -129,9 +127,7 @@ export async function POST(request: Request) {
     let messagesFromDb: DBMessage[] = [];
 
     if (chat) {
-      if (chat.userId !== session.user.id) {
-        return new ChatSDKError("forbidden:chat").toResponse();
-      }
+      // Skip ownership check since auth is disabled
       // Only fetch messages if chat already exists
       messagesFromDb = await getMessagesByChatId({ id });
     } else {
@@ -141,7 +137,7 @@ export async function POST(request: Request) {
 
       await saveChat({
         id,
-        userId: session.user.id,
+        userId,
         title,
         visibility: selectedVisibilityType,
       });
@@ -296,6 +292,13 @@ export async function POST(request: Request) {
       return error.toResponse();
     }
 
+    // Log the actual error for debugging
+    console.error("Chat API Error:", {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      vercelId,
+    });
+
     // Check for Vercel AI Gateway credit card error
     if (
       error instanceof Error &&
@@ -306,7 +309,6 @@ export async function POST(request: Request) {
       return new ChatSDKError("bad_request:activate_gateway").toResponse();
     }
 
-    console.error("Unhandled error in chat API:", error, { vercelId });
     return new ChatSDKError("offline:chat").toResponse();
   }
 }
@@ -319,18 +321,7 @@ export async function DELETE(request: Request) {
     return new ChatSDKError("bad_request:api").toResponse();
   }
 
-  const session = await auth();
-
-  if (!session?.user) {
-    return new ChatSDKError("unauthorized:chat").toResponse();
-  }
-
-  const chat = await getChatById({ id });
-
-  if (chat?.userId !== session.user.id) {
-    return new ChatSDKError("forbidden:chat").toResponse();
-  }
-
+  // Auth disabled - allow deletion without ownership check
   const deletedChat = await deleteChatById({ id });
 
   return Response.json(deletedChat, { status: 200 });
